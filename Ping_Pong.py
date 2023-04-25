@@ -38,8 +38,24 @@ class Player(GameSprite):
             self.rect.y -= self.speed
         if keys[K_DOWN]:
             self.rect.y += self.speed
-player_left = Player(65, 0, 'Stick.png', 5, 15, 100)
-player_right = Player(600, 0, 'Stick.png', 5, 15, 100)
+class Ball(GameSprite):
+    def __init__(self, rect_x, rect_y, im, speed, w, h):
+        super().__init__(rect_x, rect_y, im, speed, w, h)
+        self.speed_x = speed
+        self.speed_y = speed
+
+    def update(self):
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y
+        
+
+
+
+
+ball = Ball(350, 250, 'Ball.png', 2, sprite_side, sprite_side)
+player_left = Player(65, 0, 'Stick.png', 3, 15, 100)
+player_right = Player(600, 0, 'Stick.png', 3, 15, 100)
+
 
 
     
@@ -57,6 +73,15 @@ while Game:
     player_right.update_R()
     player_left.reset()
     player_right.reset()
+    ball.update()
+    ball.reset()
+    if sprite.collide_rect(player_left, ball) or sprite.collide_rect(player_right, ball):
+        ball.speed_x *= -1
+        ball.speed_y *= 1
+    if ball.rect.y > height - sprite_side or ball.rect.y < 0:
+        ball.speed_y *= -1
+
+
     for e in event.get():
         if e.type == QUIT:
             Game = False
